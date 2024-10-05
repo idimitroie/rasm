@@ -1,4 +1,5 @@
 
+#include "scanner.h"
 #include "instr.h"
 
 unsigned char mask_bits(unsigned int val, int n)
@@ -47,12 +48,12 @@ instr_t *instr_I_type(instr_codes_t instr_codes, int rd, int rs1, int immi)
 {
     if (immi > 2047)
     {
-        printf("ERROR ON LINE %d: immidiate value can not be more then 2047\n", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate value can not be more then 2047\n", yyget_lineno());
         exit(1);
     }
     else if (immi < -2048)
     {
-        printf("ERROR ON LINE %d: immidiate value can not be less then -2048\n", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate value can not be less then -2048\n", yyget_lineno());
         exit(1);
     }
 
@@ -70,12 +71,12 @@ instr_t *instr_I_SHAMT_type(instr_codes_t instr_codes, int rd, int rs1, int immi
 {
     if (immi > 31)
     {
-        printf("ERROR ON LINE %d: immidiate shamt for shifts can not be more then 31", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate shamt for shifts can not be more then 31", yyget_lineno());
         exit(1);
     }
     else if (immi < 0)
     {
-        printf("ERROR ON LINE %d: immidiate shamt for shifts can not be less then 0", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate shamt for shifts can not be less then 0", yyget_lineno());
         exit(1);
     }
     instr_t *instr = malloc(sizeof(instr_t));
@@ -93,17 +94,17 @@ instr_t *instr_B_type(instr_codes_t instr_codes, int rs1, int rs2, int immi)
 {
     if (immi > 4095)
     {
-        printf("ERROR ON LINE %d: immidiate value can not be more then 4095\n", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate value can not be more then 4095\n", yyget_lineno());
         exit(1);
     }
     else if (immi < -4096)
     {
-        printf("ERROR ON LINE %d: immidiate value can not be less then -4096\n", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate value can not be less then -4096\n", yyget_lineno());
         exit(1);
     }
     else if (immi % 2 != 0)
     {
-        printf("ERROR ON LINE %d: immidiate branch value must be 16bit align (i.e. devisible by 2)\n", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate branch value must be 16bit align (i.e. devisible by 2)\n", yyget_lineno());
         exit(1);
     }
 
@@ -124,12 +125,12 @@ instr_t *instr_U_type(instr_codes_t instr_codes, int rd, int immi)
 {
     if (immi > 1048575)
     {
-        printf("ERROR ON LINE %d: upper immidiate value can not be more then 1048575\n", line_number);
+        dmp_print("ERROR ON LINE %d: upper immidiate value can not be more then 1048575\n", yyget_lineno());
         exit(1);
     }
     else if (immi < -524288)
     {
-        printf("ERROR ON LINE %d: upper immidiate value can not be less then -524288\n", line_number);
+        dmp_print("ERROR ON LINE %d: upper immidiate value can not be less then -524288\n", yyget_lineno());
         exit(1);
     }
 
@@ -145,17 +146,17 @@ instr_t *instr_J_type(instr_codes_t instr_codes, int rd, int immi)
 {
     if (immi > 1048574)
     {
-        printf("ERROR ON LINE %d: upper immidiate value can not be more then 1048575\n", line_number);
+        dmp_print("ERROR ON LINE %d: upper immidiate value can not be more then 1048575\n", yyget_lineno());
         exit(1);
     }
     else if (immi < -1048576)
     {
-        printf("ERROR ON LINE %d: upper immidiate value can not be less then -1048576\n", line_number);
+        dmp_print("ERROR ON LINE %d: upper immidiate value can not be less then -1048576\n", yyget_lineno());
         exit(1);
     }
     else if (immi % 2 != 0)
     {
-        printf("ERROR ON LINE %d: immidiate jump value must be 16bit align (i.e. devisible by 2)\n", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate jump value must be 16bit align (i.e. devisible by 2)\n", yyget_lineno());
         exit(1);
     }
 
@@ -174,12 +175,12 @@ instr_t *instr_S_type(instr_codes_t instr_codes, int rs1, int immi, int rs2)
 {
     if (immi > 2047)
     {
-        printf("ERROR ON LINE %d: immidiate value can not be more then 2047\n", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate value can not be more then 2047\n", yyget_lineno());
         exit(1);
     }
     else if (immi < -2048)
     {
-        printf("ERROR ON LINE %d: immidiate value can not be less then -2048\n", line_number);
+        dmp_print("ERROR ON LINE %d: immidiate value can not be less then -2048\n", yyget_lineno());
         exit(1);
     }
 

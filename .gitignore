@@ -1,2 +1,6 @@
 bin
 .vscode
+cscope.out
+Session.vim
+build/
+.cache

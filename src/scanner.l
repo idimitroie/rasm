@@ -1,11 +1,16 @@
-
-%option noyywrap
-
 %{
+#ifndef __GNUC__
+#pragma clang diagnostic ignored "-Wunused-function" // Suppress unused function warnings
+#endif
     #include <string.h>
     #include "parser.tab.h"
-    #include "../main.h"
+    #include "main.h"
 %}
+
+%option noyywrap
+%option nounput
+%option noinput
+%option yylineno
 
 %%
 
@@ -87,16 +92,20 @@ tp      { yylval.num = 4; return REG; } // Thread pointer
 (?i:S([2-9]|1[0-1]))            { yylval.num = 16 + atoi(yytext + 1);   return REG; } // Saved register 2-11
 (?i:A[0-7])                     { yylval.num = 10 + atoi(yytext + 1);   return REG; } // Function argument 0-7
 
-;.*                     {} // Comments
-:                       { return COLON; }
 ,                       { return COMMA; }
 \n                      { return NEW_LINE; }
+;[^\n]*                     { if (debug) fprintf(stderr, "comment: %s\n", yytext); } // Comments
 
-[a-zA-Z][a-zA-Z0-9_]*   { yylval.str = strdup(yytext); return IDENTIFIER; } // Accept identifiers and lables
+[a-zA-Z][a-zA-Z0-9_]*    { yylval.str = strdup(yytext); return IDENTIFIER; } // Accept identifiers
+[a-zA-Z][a-zA-Z0-9_]*:   { yylval.str = strdup(yytext); *strchr(yylval.str, ':') = 0; return LABEL; } // Accept  lables
 
 -               { return NEG; } // Negate number
-[0-9]+          { yylval.num = atoi(yytext);                return NUM; } // Accept hex numbers
-0x[0-9a-fA-F]+  { yylval.num = strtol(yytext, NULL, 16);    return NUM; } // Accept decimal numbers
+[0-9]+          { yylval.num = atoi(yytext);                return NUM; } 
+[0-9]+:         { yylval.num = atoi(yytext);                return LOCALLABEL; } 
+[0-9]+b         { yylval.num = atoi(yytext);                return REFLLBACK; } 
+[0-9]+f         { yylval.num = atoi(yytext);                return REFLLFORWARD; } 
+
+0x[0-9a-fA-F]+  { yylval.num = strtol(yytext, NULL, 16);    return NUM; } // Accept hex numbers
 
 [ \t\r]+                {}
-.                       { printf("Failed to parse char: '%c'\n", yytext[0]); }
+.                       { dmp_print("Failed to parse char: '%c'\n", yytext[0]); }
